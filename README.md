@@ -1,1 +1,1 @@
-# IoT_Azure_Laptop
+# Laptop as IoT for Microsoft Cloud (Azure+Fabric)
