@@ -1,3 +1,10 @@
+<#
+
+    Configure Azure credentials as an Environment variables first (valid SAS token, storage account and container name)
+
+#>
+
+
 $storageAccount = $env:IOT_StorageAccount
 $container = $env:IOT_Container
 $SASToken = $env:IOT_SASToken_Blob
