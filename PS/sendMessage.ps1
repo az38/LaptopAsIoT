@@ -12,9 +12,9 @@ $Context = New-AzStorageContext -StorageAccountName $storageAccount -SasToken $S
 $data = @{}
 $data["LogicalDisks"] = Get-CimInstance -ClassName Win32_LogicalDisk | Select-Object DeviceID, Size, FreeSpace
 $data["Memory"] = Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory | Select-Object AvailableKBytes
+$data["Battery"] = (Get-WmiObject win32_battery) | Select-Object EstimatedChargeRemaining, EstimatedRunTime
 $data["UTC"] = Get-CimInstance -ClassName Win32_UTCTime
 $data | ConvertTo-JSON | Out-File -FilePath "$fileTimestampName"
-
 
 Set-AzStorageBlobContent -Container $container -File $fileTimestampName -Blob $blob -Context $Context -Force
 
