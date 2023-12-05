@@ -21,6 +21,11 @@ $data["LogicalDisks"] = Get-CimInstance -ClassName Win32_LogicalDisk | Select-Ob
 $data["Memory"] = Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory | Select-Object AvailableKBytes
 $data["Battery"] = (Get-WmiObject win32_battery) | Select-Object EstimatedChargeRemaining, EstimatedRunTime
 $data["UTC"] = Get-CimInstance -ClassName Win32_UTCTime
+
+    $wifiSignal = ((netsh wlan show interfaces) -Match '^\s+Signal' -Replace '^\s+Signal\s+:\s+','').Trim()
+    $wifiSignalArray = @{Signal = $wifiSignal}
+
+$data["WIFI"] = $wifiSignalArray
 $data | ConvertTo-JSON | Out-File -FilePath "$fileTimestampName"
 
 Set-AzStorageBlobContent -Container $container -File $fileTimestampName -Blob $blob -Context $Context -Force
