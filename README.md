@@ -25,12 +25,13 @@ Set of powershell scripts is attented to generate messages to Azure IoT Hub. the
 
 #### Configuration
 - Configure environment variables:
+    - IOT_StorageAccount
     - IOT_Container
     - IOT_DeviceID
     - IOT_HubName
     - IOT_SASToken_Blob
     - IOT_SASToken_EventHub
-
+You can execute PS/_initEnvVariables.ps1 for this purpose
 
 ### How to Use Bicep files
 > az login
@@ -43,7 +44,7 @@ Set of powershell scripts is attented to generate messages to Azure IoT Hub. the
 ### Manual Azure Cloud Configuration
 - Laptop as a devices is added manually to Azure IoT Hub
 
-> Azure scheme TBD
+![Common architecture](_img/AzureArchitecture.png)
 
 
 ### Contacts
