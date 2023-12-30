@@ -1,4 +1,4 @@
-param location string = resourceGroup().location
+param location string
 param hubName string
 param stAccName string
 param endpointContainerName string
