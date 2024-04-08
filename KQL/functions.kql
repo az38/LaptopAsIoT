@@ -1,0 +1,68 @@
+.create-or-alter function GetDatetime(json_string:string)
+{
+    todatetime(strcat(tostring(parse_json(json_string).Year), "-", tostring(parse_json(json_string).Month), "-", tostring(parse_json(json_string).Day), " ", tostring(parse_json(json_string).Hour), ":", tostring(parse_json(json_string).Minute), ":", tostring(parse_json(json_string).Second)))
+} 
+
+.create-or-alter function EventsBronzeToSilver()
+{
+    LaptopHealthEvents_Bronze
+    | extend Message = parse_json(data).Message
+    | project 
+        ServerName = tostring(parse_json(Message).ServerName),
+        Event = tostring(parse_json(Message).Event),
+        Datetime = todatetime(parse_json(data).EventProcessedUtcTime)
+} 
+.create-or-alter function LaptopHealthBronzeToSilverLogicalDisk()
+{
+	LaptopHealth_Bronze
+	| extend LogicalDisks_parsed=parse_json(LogicalDisks)
+	| mv-expand LogicalDisks_parsed
+	| project 
+		Datetime=GetDatetime(UTC),
+		ServerName=tostring(parse_json(parse_json(UTC).CimSystemProperties).ServerName), 
+		DiskID=substring(LogicalDisks_parsed.['DeviceID'], 0, 1), 
+		DiskSize=tolong(LogicalDisks_parsed.['FreeSpace'])
+} 
+.create-or-alter function LaptopHealthBronzeToSilverMemory()
+{
+	LaptopHealth_Bronze
+	| project 
+		Datetime=GetDatetime(UTC),
+		ServerName=tostring(parse_json(parse_json(UTC).CimSystemProperties).ServerName), 
+		M_AvailableKBytes=tolong(parse_json(Memory).AvailableKBytes)
+} 
+.create-or-alter function LaptopHealthBronzeToSilverBattery()
+{
+	LaptopHealth_Bronze
+	| project 
+		Datetime=GetDatetime(UTC),
+		ServerName=tostring(parse_json(parse_json(UTC).CimSystemProperties).ServerName), 
+		EstimatedChargeRemaining=tolong(parse_json(Battery).EstimatedChargeRemaining), 
+		EstimatedRunTime=tolong(parse_json(Battery).EstimatedRunTime)
+} 
+.create-or-alter function LaptopHealthSilverToGoldLogicalDisk()
+{
+	LaptopHealth_Silver_LogicalDisk
+	|summarize 
+		MinSize = min(DiskSize), 
+		MaxSize = max(DiskSize) 
+		by ServerName, DiskID, bin(Datetime, 1h)
+} 
+.create-or-alter function LaptopHealthSilverToGoldMemory()
+{
+	LaptopHealth_Silver_Memory
+	|summarize 
+		Max_AvailableKBytes = max(M_AvailableKBytes), 
+		Min_AvailableKBytes = min(M_AvailableKBytes), 
+		Avg_AvailableKBytes = avg(M_AvailableKBytes) 
+		by bin(Datetime, 1h), ServerName
+} 
+.create-or-alter function LaptopHealthSilverToGoldBattery()
+{
+	LaptopHealth_Silver_Battery
+	|summarize 
+		Max_EstimatedChargeRemaining = max(EstimatedChargeRemaining), 
+		Min_EstimatedChargeRemaining = min(EstimatedChargeRemaining), 
+		Min_EstimatedRunTime = min(EstimatedRunTime) 
+		by bin(Datetime, 1h), ServerName
+} 

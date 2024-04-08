@@ -1,0 +1,13 @@
+.create tables
+	LaptopHealth_Bronze (UTC:dynamic,Memory:dynamic,LogicalDisks:dynamic,UpdateTime:datetime,Battery:dynamic),
+	
+	LaptopHealthEvents_Bronze (data:string),
+	LaptopHealthEvents_Silver (ServerName:string,Event:string,Datetime:datetime),
+	
+	LaptopHealth_Silver_Battery (Datetime:datetime,ServerName:string,EstimatedChargeRemaining:long,EstimatedRunTime:long),
+	LaptopHealth_Silver_LogicalDisk (Datetime:datetime,ServerName:string,DiskID:string,DiskSize:long),
+	LaptopHealth_Silver_Memory (Datetime:datetime,ServerName:string,M_AvailableKBytes:long),
+	
+	LaptopHealth_Gold_Battery (Datetime:datetime,ServerName:string,Max_EstimatedChargeRemaining:long,Min_EstimatedChargeRemaining:long,Min_EstimatedRunTime:long),
+	LaptopHealth_Gold_LogicalDisk (ServerName:string,DiskID:string,Datetime:datetime,MinSize:long,MaxSize:long),
+	LaptopHealth_Gold_Memory (Datetime:datetime,ServerName:string,Max_AvailableKBytes:long,Min_AvailableKBytes:long,Avg_AvailableKBytes:real)

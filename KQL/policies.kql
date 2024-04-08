@@ -1,0 +1,92 @@
+.alter-merge table LaptopHealthEvents_Silver policy update
+```
+[
+    {
+		"IsEnabled": true,
+		"Source": "LaptopHealthEvents_Bronze",
+		"Query": "EventsBronzeToSilver",
+		"IsTransactional": false,
+		"PropagateIngestionProperties": true,
+		"ManagedIdentity": null
+    }
+]
+```
+
+.alter-merge table LaptopHealth_Silver_Battery policy update
+```
+[
+    {
+    "IsEnabled": true,
+    "Source": "LaptopHealth_Bronze",
+    "Query": "LaptopHealthBronzeToBattery",
+    "IsTransactional": false,
+    "PropagateIngestionProperties": true,
+    "ManagedIdentity": null
+    }
+]
+```
+.alter-merge table LaptopHealth_Silver_LogicalDisk policy update
+```
+[
+    {
+    "IsEnabled": true,
+    "Source": "LaptopHealth_Bronze",
+    "Query": "LaptopHealthBronzeToLogicalDisk",
+    "IsTransactional": false,
+    "PropagateIngestionProperties": true,
+    "ManagedIdentity": null
+    }
+]
+```
+.alter-merge table LaptopHealth_Silver_Memory policy update
+```
+[
+    {
+		"IsEnabled": true,
+		"Source": "LaptopHealth_Bronze",
+		"Query": "LaptopHealthBronzeToMemory",
+		"IsTransactional": false,
+		"PropagateIngestionProperties": true,
+		"ManagedIdentity": null
+    }
+]
+```
+.alter-merge table LaptopHealth_Gold_Battery policy update
+```
+[
+    {
+		"IsEnabled": true,
+		"Source": "LaptopHealth_Silver_Battery",
+		"Query": "LaptopHealthSilverToGoldBattery",
+		"IsTransactional": false,
+		"PropagateIngestionProperties": true,
+		"ManagedIdentity": null
+    }
+]
+```
+.alter-merge table LaptopHealth_Gold_LogicalDisk policy update
+```
+[
+    {
+		"IsEnabled": true,
+		"Source": "LaptopHealth_Silver_LogicalDisk",
+		"Query": "LaptopHealthSilverToGoldLogicalDisk",
+		"IsTransactional": false,
+		"PropagateIngestionProperties": true,
+		"ManagedIdentity": null
+    }
+]
+```
+.alter-merge table LaptopHealth_Gold_Memory policy update
+```
+[
+    {
+		"IsEnabled": true,
+		"Source": "LaptopHealth_Silver_Memory",
+		"Query": "LaptopHealthSilverToGoldMemory",
+		"IsTransactional": false,
+		"PropagateIngestionProperties": true,
+		"ManagedIdentity": null
+    }
+]
+```
